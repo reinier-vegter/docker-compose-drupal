@@ -1,0 +1,59 @@
+version: "2"
+
+# To get DNS to work on your host / laptop, follow instructions:
+#
+# Ubuntu:
+#   edit /etc/dhcp/dhclient.conf
+#   add:
+#      supersede domain-name "dev";
+#      prepend domain-name-servers 127.0.0.1;
+#   see: https://github.com/ruudud/devdns
+#
+
+services:
+  devdns:
+    # See https://github.com/ruudud/devdns !
+    image: ruudud/devdns
+    container_name: devdns
+    ports:
+      - "53:53/udp"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      DNS_DOMAIN: "dev"
+#    networks:
+#      - bridge
+    network_mode: bridge
+
+  mysql:
+    container_name: mysql-container
+    image: mysql:5.6.26
+    ports:
+      - "3306:3306"
+    network_mode: bridge # expose to other docker-compose networks.
+#    networks:
+#      - bridge
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+      - ./mysql_config:/etc/mysql/conf.d
+#      MYSQL_DATABASE: drupal
+#      MYSQL_USER: drupal
+#      MYSQL_PASSWORD: drupal
+#    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci # The simple way to override the mariadb config.
+#    volumes:
+#      - ./mariadb-init:/docker-entrypoint-initdb.d # Place init .sql file(s) here.
+
+  mailhog:
+    container_name: mailhog
+    image: mailhog/mailhog
+#    ports:
+#      - "8002:8025"
+    network_mode: bridge # expose to other docker-compose networks.
+
+#networks:
+#  default:
+#    external:
+#      name: bridge
+
