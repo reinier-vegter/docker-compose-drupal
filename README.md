@@ -30,8 +30,12 @@ This gives you
 
 ## Run a project
 Copy `drupal-project/docker-compose.yml` and `drupal-project/.env` to you project.
-Edit `.env`.
+Edit `.env` and `docker-compose.yml`.
+
 Run `docker-compose up -d`.
+*Note that some systems don't export user ID (UID) rendering docker to run as root on your webroot.*
+*Prepend `export UID;` to the runcommand to fix this: `export $UID; docker-compose up -d`*
+
 To stop, run `docker-compose down`.
 
 ## Slow filesystem om OSX
@@ -44,4 +48,15 @@ Read http://docs.docker4drupal.org/en/latest/macos/ .
 ## PHP logs
 
 Run `docker-compose logs -f php` from your project folder to tail the php logs.
+
+## Drush, composer and drupal console
+
+You might want to add these aliases to your ~/.bashrc file (restart terminal to take effect):
+
+```
+alias ddrush='docker-compose exec --user 82 php drush'
+alias dcomposer='docker-compose exec --user 82 php composer'
+alias ddrupal='docker-compose exec --user 82 php drupal'
+```
+
 
