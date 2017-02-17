@@ -9,7 +9,7 @@ Add this command to your boot-scripts.
 
 This gives you
  - mysql:    1 mysql-container for all persistent databases.
-             Available at localhost:3306 and from your containers at mysql.dev .
+             Available at `localhost:3306` and from your containers at `mysql` .
  - mailhog:  This is a mailsink with web UI where php-containers will send all email to.
              Note that only containers started with the project docker-compose.yml from this repo will use this!
              Available at http://mailhog.dev:8025/
