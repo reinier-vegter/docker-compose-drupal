@@ -1,5 +1,7 @@
 
-# Common apps (mysql, DNS etc)
+# Get started
+
+## Common apps (mysql, DNS etc)
 Start common  apps like mysql and mailhog (you need those first):
 `export MYSQL_DATA=/my/mysql/datafolder; cd /path/to/docker-compose-drupal/common-apps && docker-compose up -d`
 Add this command to your boot-scripts.
@@ -15,9 +17,9 @@ This gives you
              If this is not started, functionality from this repo won't work well (if not at all).
 
 
-# To get DNS to work on your host / laptop, follow instructions:
+## To get DNS to work on your host / laptop, follow instructions:
 
-## Ubuntu:
+### Ubuntu:
    edit /etc/dhcp/dhclient.conf
    add:
       supersede domain-name "dev";
@@ -25,14 +27,20 @@ This gives you
    see: https://github.com/ruudud/devdns
 
 
-# Run a project
+## Run a project
 Copy `drupal-project/docker-compose.yml` and `drupal-project/.env` to you project.
 Edit `.env`.
 Run `docker-compose up -d`.
 To stop, run `docker-compose down`.
 
-# Slow filesystem om OSX
+## Slow filesystem om OSX
 Try to use `d4d-unison-sync` in drupal-project/docker-compose.yml .
 Have not tested with it yet, so you're on your own.
 Read http://docs.docker4drupal.org/en/latest/macos/ .
+
+# Extra info
+
+## PHP logs
+
+Run `docker-compose logs -f php` from your project folder to tail the php logs.
 
