@@ -33,8 +33,6 @@ Copy `drupal-project/docker-compose.yml` and `drupal-project/.env` to you projec
 Edit `.env` and `docker-compose.yml`.
 
 Run `docker-compose up -d`.
-*Note that some systems don't export user ID (UID) rendering docker to run as root on your webroot.*
-*Prepend `export UID;` to the runcommand to fix this: `export $UID; docker-compose up -d`*
 
 To stop, run `docker-compose down`.
 
