@@ -26,7 +26,7 @@ services:
     network_mode: bridge
 
   mysql:
-    container_name: mysql-container
+    container_name: mysql
     image: mysql:5.6.26
     ports:
       - "3306:3306"
@@ -36,8 +36,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      - ./mysql_data:/var/lib/mysql
-      - ./mysql_config:/etc/mysql/conf.d
+      - ${MYSQL_DATA}:/var/lib/mysql
+      - ${MYSQL_CONFIG}:/etc/mysql/conf.d
 #      MYSQL_DATABASE: drupal
 #      MYSQL_USER: drupal
 #      MYSQL_PASSWORD: drupal
