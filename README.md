@@ -31,3 +31,8 @@ Edit `.env`.
 Run `docker-compose up -d`.
 To stop, run `docker-compose down`.
 
+# Slow filesystem om OSX
+Try to use `d4d-unison-sync` in drupal-project/docker-compose.yml .
+Have not tested with it yet, so you're on your own.
+Read http://docs.docker4drupal.org/en/latest/macos/ .
+
