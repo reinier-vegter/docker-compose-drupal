@@ -55,6 +55,11 @@ You might want to add these aliases to your ~/.bashrc file (restart terminal to 
 alias ddrush='docker-compose exec --user 82 php drush'
 alias dcomposer='docker-compose exec --user 82 php composer'
 alias ddrupal='docker-compose exec --user 82 php drupal'
+
+alias up='docker-compose up -d'
+alias down='docker-compose down'
+alias restart='docker-compose down; docker-compose up -d'
+alias logs='docker-compose logs -f php'
 ```
 
 
