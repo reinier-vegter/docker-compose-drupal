@@ -38,7 +38,7 @@ services:
     network_mode: bridge # Expose to other docker-compose networks in order to use mysql etc.
 #    networks:
 #      - bridge
-    dns: devdns
+    dns: 172.17.0.1
 
   nginx:
     container_name: ${NAME} # without .dev if using .dev dns
@@ -61,7 +61,7 @@ services:
 #          - d8-paragraphs
     external_links:
       - devdns
-    dns: devdns
+    dns: 172.17.0.1
 
 #  pma:
 #    image: phpmyadmin/phpmyadmin
