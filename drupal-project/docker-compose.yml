@@ -22,7 +22,7 @@ services:
     environment:
  #     PHP_SITE_NAME: dev
  #     PHP_HOST_NAME: localhost:8000
-      PHP_DOCROOT: web # Relative path inside the /var/www/html/ directory.
+      PHP_DOCROOT: ${DOCROOT} # Relative path inside the /var/www/html/ directory.
       PHP_SENDMAIL_PATH: /usr/sbin/sendmail -t -i -S mailhog.dev:1025
       PHP_XDEBUG_ENABLED: 1
       PHP_XDEBUG_AUTOSTART: 1
