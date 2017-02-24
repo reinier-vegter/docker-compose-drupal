@@ -59,6 +59,21 @@ services:
       - drupal
       - /myconfig
 
+# Solr for D7 (using solr 4.x).
+#  # Solr: configure search_api_solr to connect to http://${NAME}-solr:8983/solr
+#  solr:
+#    image: twinbit/docker-drupal-solr
+#    container_name: ${NAME}-solr # visit me at http://${NAME}-solr:8983/solr !
+#    volumes:
+#      - ./sites/all/modules/contrib/search_api_solr/solr-conf/4.x:/myconfig
+#      - ./.solr-data:/opt/solr/example/solr/collection1/data
+#    network_mode: bridge
+#    external_links:
+#      - devdns
+#    entrypoint: bash -c "cp -fr /myconfig/* solr/collection1/conf/; java -Xmx1024m -DSTOP.PORT=8984 -DSTOP.KEY=stopkey -jar start.jar"
+
+
+
 
 #  pma:
 #    image: phpmyadmin/phpmyadmin
