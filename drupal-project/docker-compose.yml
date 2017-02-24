@@ -31,6 +31,8 @@ services:
     volumes:
       - ./:/var/www/html
 #      - d4d-unison-sync:/var/www/html:rw # Replace volume to this to use docker-sync for macOS users
+    links:
+      - solr
     external_links:
 #      - "globaldevdockercommons_mysql_1:mysql"
       - mysql
@@ -62,6 +64,27 @@ services:
     external_links:
       - devdns
     dns: 172.17.0.1
+
+  solr:
+    image: solr:5.5
+    user: root
+    container_name: ${NAME}-solr # visit me at http://${NAME}-solr:8983/solr !
+    volumes:
+      - ./sites/all/modules/contrib/search_api_solr/solr-conf/5.x:/myconfig
+      - ./.solr-data:/opt/solr/server/solr/mycores
+    environment:
+      SOLR_UID: 0
+      SOLR_USER: root # Crazyness, I know. Found no other way because docker initiates .solr-data as root.
+    network_mode: bridge
+    external_links:
+      - devdns
+    dns: devdns
+    command:
+      - solr-create
+      - -c
+      - mycore
+      - -d
+      - /myconfig
 
 #  pma:
 #    image: phpmyadmin/phpmyadmin
