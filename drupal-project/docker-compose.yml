@@ -1,45 +1,26 @@
 version: "2"
 
-#networks:
-#  bridge:
-#    driver: bridge
+# Access site at http://${NAME}.dev
+# Point search_api_solr to http://${NAME}-solr:8983/solr/#/drupal
 
 services:
-#  mariadb:
-#    image: wodby/drupal-mariadb:1.0.0
-#    environment:
-#      MYSQL_RANDOM_ROOT_PASSWORD: 1
-#      MYSQL_DATABASE: drupal
-#      MYSQL_USER: drupal
-#      MYSQL_PASSWORD: drupal
-#    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci # The simple way to override the mariadb config.
-#    volumes:
-#      - ./mariadb-init:/docker-entrypoint-initdb.d # Place init .sql file(s) here.
 
   php:
     image: wodby/drupal-php:${PHP_WODBY_TAG}
-#    image: wodby/drupal-php:5.6-1.0.0
     environment:
- #     PHP_SITE_NAME: dev
- #     PHP_HOST_NAME: localhost:8000
-      PHP_DOCROOT: ${DOCROOT} # Relative path inside the /var/www/html/ directory.
+      PHP_DOCROOT: web # Relative path inside the /var/www/html/ directory.
       PHP_SENDMAIL_PATH: /usr/sbin/sendmail -t -i -S mailhog.dev:1025
       PHP_XDEBUG_ENABLED: 1
       PHP_XDEBUG_AUTOSTART: 1
-      # PHP_XDEBUG_REMOTE_CONNECT_BACK: 0         # This is needed to respect remote.host setting bellow
-      # PHP_XDEBUG_REMOTE_HOST: "10.254.254.254"  # You will also need to 'sudo ifconfig lo0 alias 10.254.254.254'
     volumes:
       - ./:/var/www/html
 #      - d4d-unison-sync:/var/www/html:rw # Replace volume to this to use docker-sync for macOS users
     links:
       - solr
     external_links:
-#      - "globaldevdockercommons_mysql_1:mysql"
       - mysql
       - devdns
     network_mode: bridge # Expose to other docker-compose networks in order to use mysql etc.
-#    networks:
-#      - bridge
     dns: 172.17.0.1
 
   nginx:
@@ -52,25 +33,20 @@ services:
       DRUPAL_VERSION: 8 # Allowed: 7, 8.
     volumes_from:
       - php
-#    ports:
-#      - "8000:80"
     links:
       - php
     network_mode: bridge # Expose to other docker-compose networks in order to use mysql etc.
-#    networks:
-#      bridge:
-#        aliases:
-#          - d8-paragraphs
     external_links:
       - devdns
     dns: 172.17.0.1
 
+  # Solr: configure search_api_solr to connect to http://${NAME}-solr:8983/solr/#/drupal
   solr:
-    image: solr:5.5
+    image: solr:5.4.1
     user: root
     container_name: ${NAME}-solr # visit me at http://${NAME}-solr:8983/solr !
     volumes:
-      - ./sites/all/modules/contrib/search_api_solr/solr-conf/5.x:/myconfig
+      - ./sites/all/modules/contrib/search_api_solr/solr-conf/5.x:/myconfig/conf
       - ./.solr-data:/opt/solr/server/solr/mycores
     environment:
       SOLR_UID: 0
@@ -78,13 +54,11 @@ services:
     network_mode: bridge
     external_links:
       - devdns
-    dns: devdns
     command:
-      - solr-create
-      - -c
-      - mycore
-      - -d
+      - solr-precreate
+      - drupal
       - /myconfig
+
 
 #  pma:
 #    image: phpmyadmin/phpmyadmin
@@ -94,7 +68,7 @@ services:
 #      PMA_PASSWORD: drupal
 #      PHP_UPLOAD_MAX_FILESIZE: 1G
 #      PHP_MAX_INPUT_VARS: 1G
-#    ports:
+#     ports:
 #     - "8001:80"
 
 #  mailhog:
