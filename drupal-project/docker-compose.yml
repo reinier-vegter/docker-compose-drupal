@@ -19,7 +19,6 @@ services:
       - solr
     external_links:
       - mysql
-      - devdns
     network_mode: bridge # Expose to other docker-compose networks in order to use mysql etc.
     dns: 172.17.0.1
 
@@ -27,6 +26,7 @@ services:
     container_name: ${NAME} # without .dev if using .dev dns
     image: wodby/drupal-nginx:1.10-1.1.0
     environment:
+      VIRTUAL_HOST: ${NAME}.dev # This tell global proxy about this container.
       NGINX_SERVER_NAME: ${NAME}.dev
       NGINX_UPSTREAM_NAME: php
       NGINX_DOCROOT: ${DOCROOT} # Relative path inside the /var/www/html/ directory.
@@ -36,9 +36,6 @@ services:
     links:
       - php
     network_mode: bridge # Expose to other docker-compose networks in order to use mysql etc.
-    external_links:
-      - devdns
-    dns: 172.17.0.1
 
   # Solr: configure search_api_solr to connect to http://${NAME}-solr:8983/solr/#/drupal
   solr:
@@ -49,11 +46,11 @@ services:
       - ./sites/all/modules/contrib/search_api_solr/solr-conf/5.x:/myconfig/conf
       - ./.solr-data:/opt/solr/server/solr/mycores
     environment:
+      VIRTUAL_HOST: ${NAME}-solr.dev
+      VIRTUAL_PORT: 8983
       SOLR_UID: 0
       SOLR_USER: root # Crazyness, I know. Found no other way because docker initiates .solr-data as root.
     network_mode: bridge
-    external_links:
-      - devdns
     command:
       - solr-precreate
       - drupal
@@ -67,9 +64,10 @@ services:
 #    volumes:
 #      - ./sites/all/modules/contrib/search_api_solr/solr-conf/4.x:/myconfig
 #      - ./.solr-data:/opt/solr/example/solr/collection1/data
+#    environment:
+#      VIRTUAL_HOST: ${NAME}-solr.dev
+#      VIRTUAL_PORT: 8983
 #    network_mode: bridge
-#    external_links:
-#      - devdns
 #    entrypoint: bash -c "cp -fr /myconfig/* solr/collection1/conf/; java -Xmx1024m -DSTOP.PORT=8984 -DSTOP.KEY=stopkey -jar start.jar"
 
 

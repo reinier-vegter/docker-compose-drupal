@@ -7,23 +7,26 @@ version: "2"
 #   add:
 #      supersede domain-name "dev";
 #      prepend domain-name-servers 127.0.0.1;
-#   see: https://github.com/ruudud/devdns
 #
 
 services:
+  proxy:
+    container_name: proxy
+    image: jwilder/nginx-proxy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    network_mode: bridge
+
   devdns:
-    # See https://github.com/ruudud/devdns !
-    image: ruudud/devdns
+    image: jpillora/dnsmasq
     container_name: devdns
     ports:
       - "53:53/udp"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      DNS_DOMAIN: "dev"
-#    networks:
-#      - bridge
-    network_mode: bridge
+      - ${DNSMASQ_CONFIG}:/etc/dnsmasq.conf
 
   mysql:
     container_name: mysql
@@ -48,8 +51,9 @@ services:
   mailhog:
     container_name: mailhog
     image: mailhog/mailhog
-#    ports:
-#      - "8002:8025"
+    environment:
+      VIRTUAL_HOST: mailhog.dev # This tell global proxy about this container.
+      VIRTUAL_PORT: 8025
     network_mode: bridge # expose to other docker-compose networks.
 
 #networks:
