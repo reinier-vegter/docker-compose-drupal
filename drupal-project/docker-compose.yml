@@ -19,8 +19,11 @@ services:
       - solr
     external_links:
       - mysql
+      - dockerdns
     network_mode: bridge # Expose to other docker-compose networks in order to use mysql etc.
-    dns: 172.17.0.1
+    dns:
+#     - dockerdns
+     - 172.17.0.8
 
   nginx:
     container_name: ${NAME} # without .dev if using .dev dns
@@ -51,6 +54,10 @@ services:
       SOLR_UID: 0
       SOLR_USER: root # Crazyness, I know. Found no other way because docker initiates .solr-data as root.
     network_mode: bridge
+#    external_links:
+#      - dockerdns
+    dns:
+      - 172.17.0.1
     command:
       - solr-precreate
       - drupal
@@ -92,8 +99,9 @@ services:
 #  redis:
 #    image: redis:3.2-alpine
 
-#  memcached:
-#    image: memcached:1.4-alpine
+  memcached:
+    image: memcached:1.4-alpine
+    network_mode: bridge
 
 #  memcached-admin:
 #    image: phynias/phpmemcachedadmin

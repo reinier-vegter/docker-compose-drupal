@@ -18,6 +18,7 @@ services:
       - 443:443
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ${NGINX_CONFIGS}:/etc/nginx/conf.d
     network_mode: bridge
 
   devdns:
@@ -27,6 +28,22 @@ services:
       - "53:53/udp"
     volumes:
       - ${DNSMASQ_CONFIG}:/etc/dnsmasq.conf
+
+  dockerdns:
+    # See https://github.com/ruudud/devdns !
+    image: ruudud/devdns
+    container_name: dockerdns
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${DNSMASQ_INTERNAL_CONFIG}:/etc/dnsmasq.conf
+    environment:
+      DNS_DOMAIN: "dev"
+#    networks:
+#      - bridge
+    network_mode: bridge
+    ports:
+      - "54:53/udp"
+#    ip: 172.17.254.254
 
   mysql:
     container_name: mysql
