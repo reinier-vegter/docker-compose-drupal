@@ -31,11 +31,12 @@ services:
     environment:
       VIRTUAL_HOST: ${NAME}.dev # This tell global proxy about this container.
       NGINX_SERVER_NAME: ${NAME}.dev
+      NGINX_SERVER_ROOT: /var/www/html
       NGINX_UPSTREAM_NAME: php
       NGINX_DOCROOT: ${DOCROOT} # Relative path inside the /var/www/html/ directory.
-      DRUPAL_VERSION: 8 # Allowed: 7, 8.
-    volumes_from:
-      - php
+      DRUPAL_VERSION: ${DRUPAL_VERSION}  # Allowed: 7, 8.
+    volumes:
+      - ./:/var/www/html
     links:
       - php
     network_mode: bridge # Expose to other docker-compose networks in order to use mysql etc.
