@@ -22,8 +22,7 @@ services:
       - dockerdns
     network_mode: bridge # Expose to other docker-compose networks in order to use mysql etc.
     dns:
-#     - dockerdns
-     - 172.17.0.8
+     - ${DOCKERDNS}
 
   nginx:
     container_name: ${NAME} # without .dev if using .dev dns
@@ -57,8 +56,6 @@ services:
     network_mode: bridge
 #    external_links:
 #      - dockerdns
-    dns:
-      - 172.17.0.1
     command:
       - solr-precreate
       - drupal

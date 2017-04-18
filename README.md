@@ -56,7 +56,9 @@ alias ddrush='docker-compose exec --user 82 php drush'
 alias dcomposer='docker-compose exec --user 82 php composer'
 alias ddrupal='docker-compose exec --user 82 php drupal'
 
-alias up='docker-compose up -d'
+# Note the 'up' alias adds a workaround to provide working DNS for each php-container.
+# Drupal needs this for background_process support etc.
+alias up='export DOCKERDNS=$(docker inspect -f "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" dockerdns); docker-compose up'
 alias down='docker-compose down'
 alias restart='docker-compose down; docker-compose up -d'
 alias logs='docker-compose logs -f php'
