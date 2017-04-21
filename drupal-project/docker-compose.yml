@@ -49,6 +49,7 @@ services:
       - php
     network_mode: bridge # Expose to other docker-compose networks in order to use mysql etc.
 
+  # Solr for D8 (using solr 5.x).
   # Solr: configure search_api_solr to connect to http://${NAME}-solr:8983/solr/#/drupal
   solr:
     image: solr:5.4.1
