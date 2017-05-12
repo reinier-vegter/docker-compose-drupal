@@ -8,10 +8,19 @@ services:
   php:
     image: wodby/drupal-php:${PHP_WODBY_TAG}
     environment:
-      PHP_DOCROOT: web # Relative path inside the /var/www/html/ directory.
+      PHP_DOCROOT: ${DOCROOT} # Relative path inside the /var/www/html/ directory.
       PHP_SENDMAIL_PATH: /usr/sbin/sendmail -t -i -S mailhog.dev:1025
       PHP_XDEBUG_ENABLED: 1
-      PHP_XDEBUG_AUTOSTART: 1
+      PHP_XDEBUG_REMOTE_ENABLE: 1
+      PHP_XDEBUG_REMOTE_AUTOSTART: 0
+      PHP_XDEBUG_REMOTE_CONNECT_BACK: 0
+      #
+      # Remote xdebug host. Use 172.17.0.1 for linux,
+      # or 10.254.254.254 for OSX.
+      # If using OSX, create loopback device on host once by
+      # executing `sudo ifconfig lo0 alias 10.254.254.254` (on each boot).
+      # See http://docs.docker4drupal.org/en/latest/containers/php/ .
+      PHP_XDEBUG_REMOTE_HOST: 10.254.254.254
     volumes:
       - ./:/var/www/html
 #      - d4d-unison-sync:/var/www/html:rw # Replace volume to this to use docker-sync for macOS users
@@ -40,6 +49,7 @@ services:
       - php
     network_mode: bridge # Expose to other docker-compose networks in order to use mysql etc.
 
+  # Solr for D8 (using solr 5.x).
   # Solr: configure search_api_solr to connect to http://${NAME}-solr:8983/solr/#/drupal
   solr:
     image: solr:5.4.1

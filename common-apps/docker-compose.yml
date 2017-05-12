@@ -18,7 +18,7 @@ services:
       - 443:443
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ${NGINX_CONFIGS}:/etc/nginx/conf.d
+      - ${NGINX_CONFIG}:/etc/nginx/conf.d/timeouts.conf
     network_mode: bridge
 
   devdns:
